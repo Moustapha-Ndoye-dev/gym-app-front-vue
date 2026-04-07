@@ -1,108 +1,49 @@
 <p align="center">
-  <img src="./assets/logo.svg" alt="Logo Gym App Front Vue" width="120" height="120" />
+  <img src="./assets/readme-cover.png" alt="Gym App Front — Vue" width="920" />
 </p>
 
 <h1 align="center">Gym App Front — Vue</h1>
 
 <p align="center">
-  Interface web pour salles de sport · <strong>Vue 3</strong> · <strong>Pinia</strong> · <strong>QR</strong> · API REST (backend séparé)
+  Application de gestion pour salles de sport — tableau de bord, membres, finances et administration multi-salles.
 </p>
 
 <div align="center">
 
-[![Vue.js](https://img.shields.io/badge/Vue.js-3-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white)](https://vuejs.org/)
-[![Vite](https://img.shields.io/badge/Vite-6-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Pinia](https://img.shields.io/badge/Pinia-state-FFD859?style=for-the-badge&logo=pinia&logoColor=black)](https://pinia.vuejs.org/)
-
-<br/>
-
-[![Vue Router](https://img.shields.io/badge/Vue_Router-4-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white)](https://router.vuejs.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![Chart.js](https://img.shields.io/badge/Charts-Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)](https://www.chartjs.org/)
-
-<br/>
-
-[![Node.js](https://img.shields.io/badge/Node.js-LTS-339933?style=flat-square&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
-[![Dev server](https://img.shields.io/badge/dev-localhost%3A3000-64748b?style=flat-square)](http://localhost:3000)
+[![Vue 3](https://img.shields.io/badge/Vue-3-4FC08D?style=flat-square&logo=vuedotjs&logoColor=white)](https://vuejs.org/)
+[![Vite](https://img.shields.io/badge/Vite-6-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Pinia](https://img.shields.io/badge/Pinia-2-FFD859?style=flat-square&logo=pinia&logoColor=black)](https://pinia.vuejs.org/)
+[![Tailwind](https://img.shields.io/badge/Tailwind-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 
 </div>
 
 ---
 
-Ce dépôt (**[gym-app-front-vue](https://github.com/Moustapha-Ndoye-dev/gym-app-front-vue)**) contient le **client Vue 3** pour piloter une salle : membres, abonnements, caisse, boutique, **scan QR** (contrôle d’accès) et console **super-admin** multi-salles.
-
-L’**API** (Express, Prisma, JWT, etc.) est dans un **autre dépôt** : à cloner, configurer et lancer à part (voir ci-dessous). Sans backend démarré, le front ne peut pas s’authentifier ni charger les données.
-
----
-
 ## Sommaire
 
-1. [Architecture d’exécution](#architecture-dexécution)
-2. [Prérequis](#prérequis)
-3. [Backend obligatoire (autre dépôt)](#backend-obligatoire-autre-depot)
-4. [Installation & lancement du frontend](#installation--lancement-du-frontend)
-5. [Proxy API & personnalisation](#proxy-api--personnalisation)
-6. [Build production](#build-production)
-7. [Stack & organisation du code](#stack--organisation-du-code)
-8. [Fonctionnalités par rôle](#fonctionnalités-par-rôle)
-9. [Dépannage](#dépannage)
+1. [Vue d’ensemble](#vue-densemble)
+2. [Démarrage rapide](#démarrage-rapide)
+3. [API en local](#api-en-local)
+4. [Proxy & configuration](#proxy--configuration)
+5. [Build production](#build-production)
+6. [Structure du code](#structure-du-code)
+7. [Rôles](#rôles)
+8. [Dépannage](#dépannage)
 
 ---
 
-## Architecture d’exécution
+## Vue d’ensemble
 
-En **développement**, Vite expose l’application sur **http://localhost:3000** (par défaut) et **redirige** les requêtes `/api/*` vers le serveur backend (**http://localhost:5000** par défaut).
+**[gym-app-front-vue](https://github.com/Moustapha-Ndoye-dev/gym-app-front-vue)** est le client **Vue 3 + Vite + TypeScript** pour piloter une salle : **adhérents**, **abonnements**, **caisse**, **boutique**, **tickets**, **activités**, **utilisateurs** et **contrôle d’accès** (scanner). Un volet **super-admin** regroupe le pilotage multi-salles (tableau de bord, salles, abonnements plateforme, administrateurs).
 
-```
-Navigateur  →  localhost:3000  →  Vite
-                    │
-                    │  fetch /api/...
-                    ▼
-              Proxy  →  localhost:5000/api/...  →  API REST
-```
-
-Le navigateur n’appelle que le port du front : pas de CORS bloquant en local tant que vous passez par le proxy. **Sans API démarrée**, l’application ne peut pas s’authentifier ni charger les données.
+L’état global (session, notifications, confirmations) repose sur **Pinia** ; le routage applique des **garde-navigation** selon le rôle (`src/router/index.ts`).
 
 ---
 
-## Prérequis
+## Démarrage rapide
 
-- **Node.js** LTS  
-- **npm**  
-- **Backend** opérationnel sur le port attendu par le proxy (voir `vite.config.ts`)
-
----
-
-## Backend obligatoire (autre dépôt)
-
-Procédure type dans un **autre dossier** :
-
-```bash
-git clone <URL-du-depot-backend> gym-back
-cd gym-back
-npm install
-cp .env.example .env
-```
-
-Complétez `.env` (secret JWT, mots de passe par défaut, etc.) puis :
-
-```bash
-npm run db:push
-npm run db:generate
-npm run dev
-```
-
-Contrôles utiles :
-
-- `http://localhost:5000/`
-- `http://localhost:5000/api/docs`
-
-Laissez ce serveur tourner pendant le développement du front.
-
----
-
-## Installation & lancement du frontend
+**Prérequis :** Node.js LTS, npm, et une **API** compatible accessible en développement (voir section suivante).
 
 ```bash
 git clone https://github.com/Moustapha-Ndoye-dev/gym-app-front-vue.git
@@ -111,17 +52,27 @@ npm install
 npm run dev
 ```
 
-URL locale par défaut : **http://localhost:3000**.
-
-**Ordre conseillé :** backend puis frontend.
+- Interface : **http://localhost:3000** (port défini dans `vite.config.ts`).
+- En pratique : lancer **d’abord** le backend, puis le frontend.
 
 ---
 
-## Proxy API & personnalisation
+## API en local
 
-Configuration dans `vite.config.ts` :
+Le frontend ne contient pas le serveur : clonez votre dépôt API ailleurs, configurez `.env`, migrez la base si besoin, puis démarrez-le (souvent sur le port **5000** — à aligner avec le proxy Vite).
+
+Vérifications utiles côté API : racine du service et documentation (ex. `/api/docs` si exposée).
+
+Sans API joignable, le login et les écrans métier ne peuvent pas charger de données.
+
+---
+
+## Proxy & configuration
+
+En développement, Vite **proxy** les requêtes `/api` vers le backend :
 
 ```ts
+// vite.config.ts (extrait)
 server: {
   port: 3000,
   proxy: {
@@ -133,70 +84,79 @@ server: {
 },
 ```
 
-Adaptez `target` si l’API n’est pas sur `localhost:5000`. Redémarrage de Vite nécessaire après modification.
+Adapter `target` si votre API n’écoute pas sur `localhost:5000`, puis **redémarrer** `npm run dev`.
 
-> **Production :** le résultat de `npm run build` est du statique. Il faut un **reverse proxy** (Nginx, Caddy, CloudFront + origin, etc.) qui route `/api` vers le backend, ou une **base URL** injectée au build pour que le client HTTP pointe directement vers l’API (avec CORS correctement configuré côté serveur).
+**Production :** le build est statique (`dist/`). Prévoir un reverse proxy qui route `/api` vers l’API, ou une URL d’API configurée au build avec CORS corrects côté serveur.
 
 ---
 
 ## Build production
 
 ```bash
-npm run build    # exécute vue-tsc puis vite build
-npm run preview  # sert le dossier dist en local
+npm run build   # vue-tsc puis vite build
+npm run preview # test local du dossier dist
 ```
-
-Le dossier `dist/` est prêt pour tout hébergement de fichiers statiques.
 
 ---
 
-## Stack & organisation du code
+## Structure du code
 
-| Technologie | Rôle |
-|-------------|------|
-| **Vue 3.5** | Composition API, SFC |
-| **TypeScript** | Typage |
-| **Vite 6** | Tooling |
-| **Pinia** | État global (auth, toasts, confirmations) |
-| **Vue Router 4** | Routes + guards |
-| **Tailwind CSS 4** | UI |
-| **fetch** + en-tête `Authorization` | Appels API |
-| **html5-qrcode** / **qrcode.vue** | QR |
-| **Chart.js** / **vue-chartjs** | Graphiques |
-| **Motion** | Animations |
+| Élément | Rôle |
+|--------|------|
+| Vue 3 (Composition API, SFC) | UI |
+| Vue Router 4 | Routes, meta `roles`, barre de progression (NProgress) |
+| Pinia | Auth, notifications, dialogue de confirmation |
+| Tailwind CSS 4 | Styles |
+| Chart.js + vue-chartjs | Graphiques (ex. tableau de bord) |
+| html5-qrcode, qrcode.vue | Lecture et affichage de codes |
+| Lucide (lucide-vue-next) | Icônes |
+| Motion | Animations |
+| date-fns | Dates |
 
-Structure indicative :
+Arborescence principale :
 
 ```
 src/
-├── components/     # Layout, sidebar, modales
-├── pages/          # Vues par route
-├── router/         # Définition des routes et meta rôles
-├── stores/         # Pinia (auth, notification, …)
-├── lib/            # Utilitaires, messages d’erreur API
-└── main.ts         # Bootstrap
+├── components/   # Layout, sidebar, notifications, confirmations
+├── pages/        # Écrans par route
+├── router/       # Définition des routes et garde d’accès
+├── stores/       # Pinia
+├── lib/          # Utilitaires (ex. erreurs API, limites de champs)
+└── main.ts
 ```
 
 ---
 
-## Fonctionnalités par rôle
+## Rôles
 
-Comportement aligné sur la variante **React** du produit : **admin**, **cashier**, **controller**, **member**, **superadmin** avec des ensembles de routes différents (voir `router/index.ts` et les garde-navigation).
+| Rôle | Accès principal |
+|------|-----------------|
+| **admin** | Tableau de bord, activités, boutique, abonnements, membres, tickets, contrôle d’accès, caisse, utilisateurs |
+| **cashier** | Tableau de bord, boutique, abonnements, membres, tickets, caisse |
+| **controller** | Contrôle d’accès (prioritaire pour ce profil) |
+| **member** | Tableau de bord, boutique |
+| **superadmin** | Routes `/super/*` : vue globale, salles, abonnements plateforme, administrateurs |
 
-Le **contrôleur** accède en priorité au module **contrôle d’accès** (scanner + historique).
+Les routes exactes sont dans `src/router/index.ts`.
 
 ---
 
 ## Dépannage
 
-| Symptôme | Action |
+| Problème | Piste |
 |----------|--------|
-| Erreur réseau au login | Vérifier que le backend écoute et que `target` du proxy est correct |
-| Page blanche après build | Consulter la console ; vérifier le `base` Vite si déploiement sous sous-chemin |
-| Token refusé | Durée de vie JWT ; horloge machine ; en-tête Bearer présent |
+| Erreur réseau au login | Backend démarré ? `target` du proxy correct ? |
+| Page blanche après déploiement | Console navigateur ; `base` Vite si app servie sous un sous-chemin |
+| 401 / session | JWT expiré, horloge système, token absent ou refusé côté API |
+
+---
+
+## Licence
+
+Voir le fichier [LICENSE](./LICENSE) (MIT).
 
 ---
 
 ## Auteur
 
-**Moustapha Ndoye** — ingénieur fullstack, orientation sécurité applicative et produits SaaS.
+**Moustapha Ndoye**
